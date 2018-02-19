@@ -4,7 +4,7 @@
   "description": "Simple and fast scraper for Google/Bing images using Nightmare and Request",
   "main": "index.js",
   "scripts": {
-    "start": "index.js",
+    "start": " node example.js",
     "test": "mocha test"
   },
   "repository": {
