@@ -1,60 +1,42 @@
-'use strict'
+var express = require('express');
+var cors = require('cors');
+var request = require('request');
+var app = express();
 
-var Scraper = require ('./index')
-  , google = new Scraper.Google()
-  , bing = new Scraper.Bing()
-  , pics = new Scraper.Picsearch()
-  , yahoo = new Scraper.Yahoo();
 
-// will take ALOT of time if num=undefined
-google.list({
-	keyword: 'coca cola',
-	num: 10,
-	detail: true,
-	nightmare: {
-		show: true
-	},
-  advanced: {
-    imgType: 'photo', // options: clipart, face, lineart, news, photo
-    resolution: undefined, // options: l(arge), m(edium), i(cons), etc.
-    color: undefined // options: color, gray, trans
-  }
-})
-.then(function (res) {
-	console.log('first 10 results from google', res);
-}).catch(function(err) {
-	console.log('err',err);
+app.use(function (req, res, next) {
+	res.header("Access-Control-Allow-Origin", "*");
+	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+	next();
 });
 
-// listening on events is also possible
-google.on('result', function(item) {
-	console.log('result', item);
+
+app.get('/image/', function (req, res) {
+	console.log(req.query.search)
+
+	var word = req.query.search;
+
+	var Scraper = require ('./index')
+		, google = new Scraper.Google()
+		, bing = new Scraper.Bing()
+		, pics = new Scraper.Picsearch()
+		, yahoo = new Scraper.Yahoo();
+
+	var word = req.query.search;
+
+	bing.list({
+		keyword: word,
+		num: 3
+	})
+	.then(function (a) {
+		res.send(a)
+		console.log('first 3 results from bing', a);
+	}).catch(function(err) {
+		console.log('err',err);
+	});
+
 });
 
-bing.list({
-	keyword: 'banana',
-	num: 10
-})
-.then(function (res) {
-	console.log('first 10 results from bing', res);
-}).catch(function(err) {
-	console.log('err',err);
-});
-
-pics.list({
-	keyword: 'banana',
-	num: 10,
-}).then(function (res) {
-	console.log('out',res);
-}).catch(function (err) {
-	console.log('err',err);
-});
-
-yahoo.list({
-	keyword: 'banana',
-	num: 10,
-}).then(function (res) {
-	console.log('results', res);
-}).catch(function (err) {
-	console.log('err',err);
-});
+app.listen('5000')
+console.log('Listening on 5000');
+exports = module.exports = app;
