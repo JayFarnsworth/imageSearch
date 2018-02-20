@@ -24,11 +24,13 @@ app.get('/image/', function (req, res) {
 
 	var word = req.query.search;
 
-	bing.list({
+	yahoo.list({
 		keyword: word,
-		num: 3
-	})
-	.then(function (a) {
+		num: 2,
+	}).then(function (res) {
+		console.log('results', res);
+		return res
+	}).then(function (a) {
 		res.send(a)
 		console.log('first 3 results from bing', a);
 	}).catch(function(err) {
@@ -37,6 +39,6 @@ app.get('/image/', function (req, res) {
 
 });
 
-app.listen(process.env.PORT || 5000)
-console.log('Listening on 5000');
+app.listen(process.env.PORT || 8000)
+console.log('Listening on 8000');
 exports = module.exports = app;
